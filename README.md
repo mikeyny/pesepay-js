@@ -1,8 +1,8 @@
 # PesePay-JS
 
-A Node.js client library for integrating with the PesePay API.
+A Node.js client library for integrating with the PesePay API with Typescript support.
 
->**This is an unofficial library made by [Michael Nyamande](https://twitter.com/mikeyny_zw) after being frustrated with the official library which is poorly documented and not well maintained.**
+>**This is an unofficial library made by [Michael Nyamande](https://twitter.com/mikeyny_zw) after being frustrated with the official library which is not well documented and is not regularly updated.**
 
 ## Installation
 
@@ -34,6 +34,7 @@ const transactionDetails = {
   returnUrl: 'https://my.return.url.com'
 };
 
+// alternatively use await with try-catch syntax 
 client.initiateTransaction(transactionDetails)
   .then(response => console.log(response))
   .catch(error => console.error(error));
@@ -43,7 +44,20 @@ client.initiateTransaction(transactionDetails)
 Makes a seamless payment:
 ```javascript
 // Provide the required payment details
-const paymentDetails = { /* ... */ };
+const paymentDetails = {
+    amountDetails: {
+      amount: 10,
+      currencyCode: "ZWL"
+    },
+    merchantReference:  "YOUR-UNIQUE-REF",
+    reasonForPayment: "Online payment for Camera",
+    resultUrl: "https://my.return.url.com",
+    paymentMethodCode:  "PZW201",
+    customer: {
+      phoneNumber:"0770000000",
+    },
+    paymentMethodRequiredFields: { customerPhoneNumber: "0770000000"}
+  };
 
 client.makeSeamlessPayment(paymentDetails)
   .then(response => console.log(response))
