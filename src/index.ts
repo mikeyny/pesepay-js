@@ -8,10 +8,12 @@ import { PaymentMethod } from './models/payment-method';
 
 export class PesePayClient {
     private http: AxiosInstance;
-  private security: PesePaySecurity;
-    constructor(apiKey: string, encryptionKey: string) {
+    private security: PesePaySecurity;
+    constructor(apiKey: string, encryptionKey: string, isTest:boolean=false) {
+      const baseURL = isTest? 'https://api.sandbox.pesepay.com/': 'https://api.pesepay.com/api/payments-engine/'
+
         this.http = axios.create({
-          baseURL: 'https://api.pesepay.com/api/payments-engine/',
+          baseURL,
           headers: {
             'authorization': apiKey,
             'content-type': 'application/json'

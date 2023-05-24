@@ -18,6 +18,11 @@ To use this library, you need to initialize the PesePayClient with your API Key 
 const PesePayClient = require('pesepay-js');
 
 const client = new PesePayClient('your-api-key', 'your-encryption-key');
+
+// or use the client in test mode by passing the last argument `isTest` as true
+
+const client = new PesePayClient('your-api-key', 'your-encryption-key',true);
+
 ```
 ### Available Methods
 
@@ -34,11 +39,32 @@ const transactionDetails = {
   returnUrl: 'https://my.return.url.com'
 };
 
-// alternatively use await with try-catch syntax 
+
 client.initiateTransaction(transactionDetails)
-  .then(response => console.log(response))
+  .then(response => {
+    console.log(response);
+    // User the redirect url to complete the transaction on Pesepay payment page
+    const redirectUrl = response.redirectUrl;
+    // Save the reference number (used to check the status of a transaction and to make the payment)
+    const referenceNumber = response.referenceNumber;
+  })
   .catch(error => console.error(error));
 ```
+ Alternatively, use await with try-catch syntax 
+ ```javascript
+ try{
+    result = await client.initiateTransaction(transactionDetails);
+    // User the redirect url to complete the transaction on Pesepay payment page
+    const redirectUrl = response.redirectUrl;
+    // Save the reference number (used to check the status of a transaction and to make the payment)
+    const referenceNumber = response.referenceNumber;
+ }catch(error){
+    console.error(error)
+    //handle error
+ }
+
+ ```
+
 
 **`makeSeamlessPayment(paymentDetails)`**
 Makes a seamless payment:
@@ -60,8 +86,14 @@ const paymentDetails = {
   };
 
 client.makeSeamlessPayment(paymentDetails)
-  .then(response => console.log(response))
-  .catch(error => console.error(error));
+  .then(response => {
+       // Save the poll url and reference number (used to check the status of a transaction)
+       const pollUrl = response.pollUrl;
+       const referenceNumber = response.referenceNumber;
+     })
+     .catch(error => {
+       // Handle error
+     });
 
 ```
 
@@ -69,7 +101,11 @@ client.makeSeamlessPayment(paymentDetails)
 Checks the status of a payment:
 ```javascript
 client.checkPaymentStatus('transaction-reference-number')
-  .then(response => console.log(response))
+  .then(response => {
+    console.log(response)
+    // check transaction status
+    const status = response.transactionStatus
+    })
   .catch(error => console.error(error));
 ```
 
@@ -85,16 +121,28 @@ client.getActiveCurrency()
 **`getPaymentMethods(currencyCode)`**
 Gets the payment methods available for a specified currency:
 ```javascript
-client.getPaymentMethods('ZWL')
+const currencyCode = 'ZWL'
+client.getPaymentMethods(currencyCode)
   .then(response => console.log(response))
   .catch(error => console.error(error));
 ```
 
 ## Testing
-You can run the tests with the following command:
+
+This project uses `Jest` to run it's tests. Before running tests, open `test/pesepay.test.ts` and change the values at the top of the file:
+```javascript
+// Replace with your actual keys for real testing
+const ENCRYPTION_KEY= ""
+const INTEGRATION_KEY=""
+const phoneNumber=""
+const referenceNumber = ""
+const useTestEnvironment = false
+```
+
+After replacing this variables, you can run the tests with the following command:
 ```bash
 npm run test
 ```
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the ISC License.
