@@ -17,6 +17,10 @@
   "payment-gateway"
   ],
   "author": "Michael Nyamande mike@codebytes.co.zw",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeyny/pesepay-js.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
