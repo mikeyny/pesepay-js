@@ -18,11 +18,6 @@ To use this library, you need to initialize the PesePayClient with your API Key 
 const PesePayClient = require('pesepay-js');
 
 const client = new PesePayClient('your-api-key', 'your-encryption-key');
-
-// or use the client in test mode by passing the last argument `isTest` as true
-
-const client = new PesePayClient('your-api-key', 'your-encryption-key',true);
-
 ```
 ### Available Methods
 
@@ -136,7 +131,6 @@ const ENCRYPTION_KEY= ""
 const INTEGRATION_KEY=""
 const phoneNumber=""
 const referenceNumber = ""
-const useTestEnvironment = false
 ```
 
 After replacing this variables, you can run the tests with the following command:

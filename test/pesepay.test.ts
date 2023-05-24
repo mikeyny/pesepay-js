@@ -5,11 +5,10 @@ import { PesePayClient } from '../src/index';
 const ENCRYPTION_KEY= ""
 const INTEGRATION_KEY=""
 const phoneNumber=""
-const referenceNumber = ""
-const useTestEnvironment = false
+const referenceNumber = "";
 
 
-const client = new PesePayClient(INTEGRATION_KEY, ENCRYPTION_KEY, useTestEnvironment);
+const client = new PesePayClient(INTEGRATION_KEY, ENCRYPTION_KEY);
 
 test('initiate transaction', async () => {
   const transaction = {
