@@ -15,7 +15,7 @@ npm install pesepay-js
 ## Usage
 To use this library, you need to initialize the PesePayClient with your API Key and Encryption Key:
 ```javascript
-const PesePayClient = require('pesepay-js');
+const { PesePayClient } = require('pesepay-js');
 
 const client = new PesePayClient('your-api-key', 'your-encryption-key');
 ```
