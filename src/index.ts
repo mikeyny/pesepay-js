@@ -17,11 +17,47 @@ export class PesePayClient {
           headers: {
             'authorization': integrationKey,
             'content-type': 'application/json'
-          }
+          },insecureHTTPParser:true
         });
     
         this.security = new PesePaySecurity(encryptionKey);
+
+        // Function to sanitize response headers
+
+
+
+
+    // Add a response interceptor
+    this.http.interceptors.response.use(
+      response => {
+          // Sanitize headers in the response
+          response.headers = this.sanitizeHeaders(response.headers);
+          return response;
+      },
+      error => {
+          // Check if the error is due to invalid header value character
+          if (error.response) {
+              error.response.headers = this.sanitizeHeaders(error.response.headers);
+              return Promise.resolve(error.response);
+          }
+          return Promise.reject(error);
       }
+    );
+      }
+
+      sanitizeHeaders(headers: any): Record<string, string | string[]>{
+        const sanitizedHeaders: Record<string, string | string[]> = {};
+        for (const key in headers) {
+            if (headers.hasOwnProperty(key)) {
+                try {
+                    sanitizedHeaders[key] = headers[key].replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+                } catch (e) {
+                    sanitizedHeaders[key] = headers[key];
+                }
+            }
+        }
+        return sanitizedHeaders;
+      };
     
       async initiateTransaction(request: TransactionInitiationRequest): Promise<Transaction> {
         const encryptedPayload = this.security.encryptData(request);

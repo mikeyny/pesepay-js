@@ -1,6 +1,8 @@
 // pesepay.test.ts
 import { PesePayClient } from '../src/index';
 
+
+
 // Replace with your actual keys for real testing
 const ENCRYPTION_KEY= ""
 const INTEGRATION_KEY=""
@@ -14,7 +16,7 @@ test('initiate transaction', async () => {
   const transaction = {
     amountDetails: {
       amount: 10,
-      currencyCode: "ZWL"
+      currencyCode: "USD"
     },
     reasonForPayment: "Online payment for Camera",
     resultUrl: "https://my.resulturl.com",
@@ -40,12 +42,12 @@ test('make seamless payment', async () => {
   const payment = {
     amountDetails: {
       amount: 10,
-      currencyCode: "ZWL"
+      currencyCode: "USD"
     },
     merchantReference:  Math.floor(Math.random() * 10000).toString(),
     reasonForPayment: "Online payment for Camera",
     resultUrl: "https://my.return.url.com",
-    paymentMethodCode:  "PZW201",
+    paymentMethodCode:  "PZW211",
     customer: {
       phoneNumber:phoneNumber,
     },
