@@ -23,6 +23,9 @@ const client = new PesePayClient('your-api-key', 'your-encryption-key');
 
 **`initiateTransaction(transactionDetails)`**
 Initiates a transaction:
+
+**Using async/await syntax:**
+
 ```javascript
 const transactionDetails = {
   amountDetails: {
@@ -34,6 +37,21 @@ const transactionDetails = {
   returnUrl: 'https://my.return.url.com'
 };
 
+try {
+  const response = await client.initiateTransaction(transactionDetails);
+  console.log(response);
+  // Use the redirect URL to complete the transaction on the Pesepay payment page
+  const redirectUrl = response.redirectUrl;
+  // Save the reference number (used to check the status of a transaction and to make the payment)
+  const referenceNumber = response.referenceNumber;
+} catch (error) {
+  console.error(error);
+  // Handle error
+}
+```
+
+Using promise syntax:
+```javascript
 
 client.initiateTransaction(transactionDetails)
   .then(response => {
@@ -45,20 +63,6 @@ client.initiateTransaction(transactionDetails)
   })
   .catch(error => console.error(error));
 ```
- Alternatively, use await with try-catch syntax 
- ```javascript
- try{
-    result = await client.initiateTransaction(transactionDetails);
-    // User the redirect url to complete the transaction on Pesepay payment page
-    const redirectUrl = response.redirectUrl;
-    // Save the reference number (used to check the status of a transaction and to make the payment)
-    const referenceNumber = response.referenceNumber;
- }catch(error){
-    console.error(error)
-    //handle error
- }
-
- ```
 
 
 **`makeSeamlessPayment(paymentDetails)`**
@@ -66,60 +70,97 @@ Makes a seamless payment:
 ```javascript
 // Provide the required payment details
 const paymentDetails = {
-    amountDetails: {
-      amount: 10,
-      currencyCode: "ZWL"
-    },
-    merchantReference:  "YOUR-UNIQUE-REF",
-    reasonForPayment: "Online payment for Camera",
-    resultUrl: "https://my.return.url.com",
-    paymentMethodCode:  "PZW201",
-    customer: {
-      phoneNumber:"0770000000",
-    },
-    paymentMethodRequiredFields: { customerPhoneNumber: "0770000000"}
-  };
+  amountDetails: {
+    amount: 10,
+    currencyCode: "USD"
+  },
+  merchantReference: "YOUR-UNIQUE-REF",
+  reasonForPayment: "Online payment for Camera",
+  resultUrl: "https://my.return.url.com",
+  paymentMethodCode: "PZW211",
+  customer: {
+    phoneNumber: "0770000000",
+  },
+  paymentMethodRequiredFields: { customerPhoneNumber: "0770000000" }
+};
 
-client.makeSeamlessPayment(paymentDetails)
-  .then(response => {
-       // Save the poll url and reference number (used to check the status of a transaction)
-       const pollUrl = response.pollUrl;
-       const referenceNumber = response.referenceNumber;
-     })
-     .catch(error => {
-       // Handle error
-     });
-
+try {
+  const response = await client.makeSeamlessPayment(paymentDetails);
+  // Save the poll URL and reference number (used to check the status of a transaction)
+  const pollUrl = response.pollUrl;
+  const referenceNumber = response.referenceNumber;
+} catch (error) {
+  console.error(error);
+  // Handle error
+}
 ```
 
 **`checkPaymentStatus(referenceNumber)`**
 Checks the status of a payment:
 ```javascript
-client.checkPaymentStatus('transaction-reference-number')
-  .then(response => {
-    console.log(response)
-    // check transaction status
-    const status = response.transactionStatus
-    })
-  .catch(error => console.error(error));
+try {
+  const response = await client.checkPaymentStatus('transaction-reference-number');
+  console.log(response);
+  // Check transaction status
+  const status = response.transactionStatus;
+} catch (error) {
+  console.error(error);
+  // Handle error
+}
+```
+
+**`initiateAndPollSeamlessTransaction(request, pollingInterval?)`**
+Initiates a seamless transaction and polls its status until completion. The polling frequency is optional and by default set to 3000 milliseconds.
+
+```javascript
+const paymentDetails = {
+  amountDetails: {
+    amount: 10,
+    currencyCode: "USD"
+  },
+  merchantReference: "YOUR-UNIQUE-REF",
+  reasonForPayment: "Online payment for Camera",
+  resultUrl: "https://my.return.url.com",
+  paymentMethodCode: "PZW211",
+  customer: {
+    phoneNumber: "0770000000",
+  },
+  paymentMethodRequiredFields: { customerPhoneNumber: "0770000000" }
+};
+
+try {
+  const transaction = await client.initiateAndPollSeamlessTransaction(paymentDetails, 3000);
+  console.log(transaction);
+  // Transaction completed
+} catch (error) {
+  console.error(error);
+  // Handle error
+}
 ```
 
 **`getActiveCurrency()`**
 Gets the current active currencies on the gateway:
 ```javascript
-client.getActiveCurrency()
-  .then(response => console.log(response))
-  .catch(error => console.error(error));
-
+try {
+  const response = await client.getActiveCurrencies();
+  console.log(response);
+} catch (error) {
+  console.error(error);
+  // Handle error
+}
 ```
 
 **`getPaymentMethods(currencyCode)`**
 Gets the payment methods available for a specified currency:
 ```javascript
-const currencyCode = 'ZWL'
-client.getPaymentMethods(currencyCode)
-  .then(response => console.log(response))
-  .catch(error => console.error(error));
+const currencyCode = 'USD';
+try {
+  const response = await client.getPaymentMethodsByCurrency(currencyCode);
+  console.log(response);
+} catch (error) {
+  console.error(error);
+  // Handle error
+}
 ```
 
 ## Testing

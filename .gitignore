@@ -2,5 +2,5 @@ node_modules/
 dist/
 *.log
 package-lock.json
-test/credentials
+test/.credentials
 
