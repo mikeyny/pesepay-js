@@ -29,3 +29,4 @@ yarn.lock
 .idea/
 .vscode/
 *.iml
+test/.credentials
