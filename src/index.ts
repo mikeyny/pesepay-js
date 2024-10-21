@@ -26,7 +26,16 @@ export class PesePayClient {
       headers: {
         'authorization': integrationKey,
         'content-type': 'application/json'
-      }, insecureHTTPParser: true
+      }, 
+      insecureHTTPParser: true,
+      transformResponse: [(data) => {
+        try {
+          return JSON.parse(data); // Transform response data to JSON
+        } catch (error) {
+          return data; // Return raw data if JSON parsing fails
+        }
+      }],
+      validateStatus: () => true // Accept all status codes
     });
 
     this.security = new PesePaySecurity(encryptionKey);
